@@ -1,24 +1,18 @@
-# Notification plugin skeleton
+# Hipchat integration for GoCD
 
-This is merely a skeleton plugin that plugin developers can fork to get quickly
-started with writing notification plugins for GoCD.
+This Plugin for GoCD enables Notifications to be posted on Hipchat.
 
-## Getting started
 
-* Edit the file `build.gradle`
-* Edit the `GetPluginConfigurationExecutor.java` class to add any configuration fields that should be shown in the view.
-* Edit the `plugin-settings.template.html` file which contains the view for the plugin settings page of your plugin.
-* Edit the `PluginSettings.java` file which contains the model for your settings.
-* Implement the `StageStatusRequestExecutor.java` class to get a basic notification plugin working.
+## Building and testing
 
-## Building the code base
-
-To build the jar, run `./gradlew clean test assemble`
+To start GoCD inside a docker container run `make server` 
+To build the jar and deploy it to the container run `make deploy`
 
 ## License
 
 ```plain
-Copyright 2016 ThoughtWorks, Inc.
+ Copyright 2016 MaibornWolff GmbH (HipChat integration)
+ Copyright 2016 ThoughtWorks, Inc. (Template)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,3 +26,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+

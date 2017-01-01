@@ -33,9 +33,9 @@ import de.maibornwolff.hipchat.requests.ValidatePluginSettings;
 import static de.maibornwolff.hipchat.Constants.PLUGIN_IDENTIFIER;
 
 @Extension
-public class ExamplePlugin implements GoPlugin {
+public class HipChatPlugin implements GoPlugin {
 
-    public static final Logger LOG = Logger.getLoggerFor(ExamplePlugin.class);
+    public static final Logger LOG = Logger.getLoggerFor(HipChatPlugin.class);
 
     private GoApplicationAccessor accessor;
     private PluginRequest pluginRequest;

@@ -25,6 +25,8 @@ import de.maibornwolff.hipchat.executors.ValidateConfigurationExecutor;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.maibornwolff.hipchat.executors.GetPluginConfigurationExecutor.PIPELINE_TO_ROOM_MAPPING;
+
 public class ValidatePluginSettings extends HashMap<String, String> {
     private static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
@@ -38,6 +40,10 @@ public class ValidatePluginSettings extends HashMap<String, String> {
         }
 
         return result;
+    }
+
+    private static void shouldContainValidAndCompleteJSON(Entry<String, Map<String, String>> entry) {
+
     }
 
     public RequestExecutor executor() {

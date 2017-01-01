@@ -1,12 +1,16 @@
-# Hipchat integration for GoCD
+# HipChat integration for GoCD
 
-This Plugin for GoCD enables Notifications to be posted on Hipchat.
+This Plugin for GoCD enables Notifications to be posted on HipChat.
 
+## Features 
+
+* Get notified when any stage in your pipeline fails.
+* Configure a separate room for each pipeline.
 
 ## Building and testing
 
 To start GoCD inside a docker container run `make server` 
-To build the jar and deploy it to the container run `make deploy`
+To build the plugin jar and deploy it to the container run `make deploy`
 
 ## License
 

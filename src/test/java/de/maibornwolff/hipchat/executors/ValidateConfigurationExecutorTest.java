@@ -33,20 +33,8 @@ public class ValidateConfigurationExecutorTest {
         assertThat(response.responseCode(), is(200));
         JSONAssert.assertEquals("[\n" +
                 "  {\n" +
-                "    \"message\": \"Go Server URL must not be blank.\",\n" +
-                "    \"key\": \"go_server_url\"\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"message\": \"API URL must not be blank.\",\n" +
-                "    \"key\": \"api_url\"\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"message\": \"API User must not be blank.\",\n" +
-                "    \"key\": \"api_user\"\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"message\": \"API Key must not be blank.\",\n" +
-                "    \"key\": \"api_key\"\n" +
+                "    \"message\": \"HipChat Server URL must not be blank.\",\n" +
+                "    \"key\": \"hipchat_server_url\"\n" +
                 "  }\n" +
                 "]", response.responseBody(), true);
     }
@@ -54,10 +42,9 @@ public class ValidateConfigurationExecutorTest {
     @Test
     public void shouldValidateAGoodConfiguration() throws Exception {
         ValidatePluginSettings settings = new ValidatePluginSettings();
-        settings.put("api_url", "https://api.example.com");
-        settings.put("api_user", "bob");
-        settings.put("api_key", "p@ssw0rd");
-        settings.put("go_server_url", "https://ci.example.com");
+        settings.put("hipchat_server_url", "https://hipchat.example.com");
+        settings.put("default_room", "TestRoom");
+        settings.put("default_room_notification_token", "p@ssw0rd");
         GoPluginApiResponse response = new ValidateConfigurationExecutor(settings).execute();
 
         assertThat(response.responseCode(), is(200));

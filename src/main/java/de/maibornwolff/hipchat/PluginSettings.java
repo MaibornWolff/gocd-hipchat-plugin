@@ -21,45 +21,29 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-// Implement any settings that your plugin needs
 public class PluginSettings {
     private static final Gson GSON = new GsonBuilder().
             excludeFieldsWithoutExposeAnnotation().
             create();
 
     @Expose
-    @SerializedName("go_server_url")
-    private String goServerUrl;
+    @SerializedName("hipchat_server_url")
+    private String hipchatServerUrl;
 
     @Expose
-    @SerializedName("api_user")
-    private String apiUser;
+    @SerializedName("pipeline_to_room_mapping")
+    private String pipelineToRoomMapping;
 
-    @Expose
-    @SerializedName("api_key")
-    private String apiKey;
-
-    @Expose
-    @SerializedName("api_url")
-    private String apiUrl;
 
     public static PluginSettings fromJSON(String json) {
         return GSON.fromJson(json, PluginSettings.class);
     }
 
-    public String getApiUser() {
-        return apiUser;
+    public String getPipelineToRoomMapping() {
+        return pipelineToRoomMapping;
     }
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    public String getGoServerUrl() {
-        return goServerUrl;
+    public String getHipchatServerUrl() {
+        return hipchatServerUrl;
     }
 }

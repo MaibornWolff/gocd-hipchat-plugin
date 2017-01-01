@@ -25,26 +25,20 @@ import de.maibornwolff.hipchat.RequestExecutor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/*
- * TODO: add any additional configuration fields here.
- */
 public class GetPluginConfigurationExecutor implements RequestExecutor {
 
     private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-    public static final Field GO_SERVER_URL = new NonBlankField("go_server_url", "Go Server URL", null, true, false, "0");
-    public static final Field API_SERVER_URL = new NonBlankField("api_url", "API URL", null, true, false, "1");
-    public static final Field API_USER = new NonBlankField("api_user", "API User", null, true, false, "2");
-    public static final Field API_KEY = new NonBlankField("api_key", "API Key", null, true, false, "3");
+    public static final Field HIPCHAT_SERVER_URL = new NonBlankField("hipchat_server_url",
+            "HipChat Server URL", null, true, false, "0");
+    public static final Field PIPELINE_TO_ROOM_MAPPING = new Field("pipeline_to_room_mapping", "Pipeline to room mapping",
+            null, false, true, "1");
 
     public static final Map<String, Field> FIELDS = new LinkedHashMap<>();
 
     static {
-        FIELDS.put(GO_SERVER_URL.key(), GO_SERVER_URL);
-
-        FIELDS.put(API_SERVER_URL.key(), API_SERVER_URL);
-        FIELDS.put(API_USER.key(), API_USER);
-        FIELDS.put(API_KEY.key(), API_KEY);
+        FIELDS.put(HIPCHAT_SERVER_URL.key(), HIPCHAT_SERVER_URL);
+        FIELDS.put(PIPELINE_TO_ROOM_MAPPING.key(), PIPELINE_TO_ROOM_MAPPING);
     }
 
     public GoPluginApiResponse execute() {

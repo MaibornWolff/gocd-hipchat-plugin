@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import de.maibornwolff.hipchat.PluginRequest;
+import de.maibornwolff.hipchat.PluginSettings;
 import de.maibornwolff.hipchat.RequestExecutor;
 import de.maibornwolff.hipchat.requests.StageStatusRequest;
 
@@ -53,9 +54,8 @@ public class StageStatusRequestExecutor implements RequestExecutor {
     }
 
     protected void sendNotification() throws Exception {
-        // TODO: Implement this. The request.pipeline object has all the details about the pipeline, materials, stages and jobs
-        // If you need access to settings like API keys, URLs, then call PluginRequest#getPluginSettings
-//        PluginSettings pluginSettings = pluginRequest.getPluginSettings();
-        throw new UnsupportedOperationException();
+        PluginSettings pluginSettings = pluginRequest.getPluginSettings();
+        String message = String.format("THIS IS MY ROOM: %s", System.getenv("HIPCHAT_NOTIFICATION_ROOM"));
+        throw new RuntimeException(message);
     }
 }

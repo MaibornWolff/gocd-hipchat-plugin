@@ -45,29 +45,17 @@ public class GetPluginConfigurationExecutorTest {
 
         assertThat(response.responseCode(), CoreMatchers.is(200));
         String expectedJSON = "{\n" +
-                "  \"go_server_url\": {\n" +
-                "    \"display-name\": \"Go Server URL\",\n" +
+                "  \"hipchat_server_url\": {\n" +
+                "    \"display-name\": \"HipChat Server URL\",\n" +
                 "    \"required\": true,\n" +
                 "    \"secure\": false,\n" +
                 "    \"display-order\": \"0\"\n" +
                 "  },\n" +
-                "  \"api_url\": {\n" +
-                "    \"display-name\": \"API URL\",\n" +
-                "    \"required\": true,\n" +
-                "    \"secure\": false,\n" +
+                "  \"pipeline_to_room_mapping\": {\n" +
+                "    \"display-name\": \"Pipeline to room mapping\",\n" +
+                "    \"required\": false,\n" +
+                "    \"secure\": true,\n" +
                 "    \"display-order\": \"1\"\n" +
-                "  },\n" +
-                "  \"api_user\": {\n" +
-                "    \"display-name\": \"API User\",\n" +
-                "    \"required\": true,\n" +
-                "    \"secure\": false,\n" +
-                "    \"display-order\": \"2\"\n" +
-                "  },\n" +
-                "  \"api_key\": {\n" +
-                "    \"display-name\": \"API Key\",\n" +
-                "    \"required\": true,\n" +
-                "    \"secure\": false,\n" +
-                "    \"display-order\": \"3\"\n" +
                 "  }\n" +
                 "}";
         JSONAssert.assertEquals(expectedJSON, response.responseBody(), true);

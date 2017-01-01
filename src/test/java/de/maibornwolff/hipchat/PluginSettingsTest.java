@@ -25,15 +25,12 @@ public class PluginSettingsTest {
     @Test
     public void shouldDeserializeFromJSON() throws Exception {
         PluginSettings pluginSettings = PluginSettings.fromJSON("{" +
-                "\"go_server_url\": \"https://build.go.cd/go\", " +
-                "\"api_user\": \"bob\", " +
-                "\"api_key\": \"p@ssw0rd\", " +
-                "\"api_url\": \"https://cloud.example.com/api/v1\" " +
+                "\"hipchat_server_url\": \"https://hipchat.example.com/\", " +
+                "\"default_room\": \"Myroom\", " +
+                "\"pipeline_to_room_mapping\": \"Something\nMultiline\" " +
                 "}");
 
-        assertThat(pluginSettings.getGoServerUrl(), is("https://build.go.cd/go"));
-        assertThat(pluginSettings.getApiUser(), is("bob"));
-        assertThat(pluginSettings.getApiKey(), is("p@ssw0rd"));
-        assertThat(pluginSettings.getApiUrl(), is("https://cloud.example.com/api/v1"));
+        assertThat(pluginSettings.getHipchatServerUrl(), is("https://hipchat.example.com/"));
+        assertThat(pluginSettings.getPipelineToRoomMapping(), is("Something\nMultiline"));
     }
 }

@@ -17,16 +17,20 @@
 package de.maibornwolff.hipchat.executors;
 
 import com.google.gson.Gson;
+import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import de.maibornwolff.hipchat.HipChatPlugin;
 import de.maibornwolff.hipchat.RequestExecutor;
 import de.maibornwolff.hipchat.requests.ValidatePluginSettings;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ValidateConfigurationExecutor implements RequestExecutor {
     private static final Gson GSON = new Gson();
+    public static final Logger LOG = Logger.getLoggerFor(HipChatPlugin.class);
 
     private final ValidatePluginSettings settings;
 
@@ -35,7 +39,9 @@ public class ValidateConfigurationExecutor implements RequestExecutor {
     }
 
     public GoPluginApiResponse execute() {
-        ArrayList<Map<String, String>> result = new ArrayList<>();
+        LOG.info(String.format("Validating config: %s", settings));
+        List<Map<String, String>> result = new ArrayList<>();
+
 
         for (Map.Entry<String, Field> entry : GetPluginConfigurationExecutor.FIELDS.entrySet()) {
             Field field = entry.getValue();

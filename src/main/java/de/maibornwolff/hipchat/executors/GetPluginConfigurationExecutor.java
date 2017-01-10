@@ -31,7 +31,8 @@ public class GetPluginConfigurationExecutor implements RequestExecutor {
 
     public static final Field HIPCHAT_SERVER_URL = new NonBlankField("hipchat_server_url",
             "HipChat Server URL", null, true, false, "0");
-    public static final Field PIPELINE_TO_ROOM_MAPPING = new Field("pipeline_to_room_mapping", "Pipeline to room mapping",
+
+    public static final Field PIPELINE_TO_ROOM_MAPPING = new Field("pipelineConfig", "Pipeline Config",
             null, false, true, "1");
 
     public static final Map<String, Field> FIELDS = new LinkedHashMap<>();

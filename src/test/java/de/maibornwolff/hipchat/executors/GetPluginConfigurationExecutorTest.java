@@ -51,8 +51,8 @@ public class GetPluginConfigurationExecutorTest {
                 "    \"secure\": false,\n" +
                 "    \"display-order\": \"0\"\n" +
                 "  },\n" +
-                "  \"pipeline_to_room_mapping\": {\n" +
-                "    \"display-name\": \"Pipeline to room mapping\",\n" +
+                "  \"pipelineConfig\": {\n" +
+                "    \"display-name\": \"Pipeline Config\",\n" +
                 "    \"required\": false,\n" +
                 "    \"secure\": true,\n" +
                 "    \"display-order\": \"1\"\n" +

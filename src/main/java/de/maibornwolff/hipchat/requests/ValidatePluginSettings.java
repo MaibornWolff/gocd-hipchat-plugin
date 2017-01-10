@@ -38,6 +38,7 @@ public class ValidatePluginSettings extends HashMap<String, String> {
         for (Map.Entry<String, Map<String, String>> entry : settings.entrySet()) {
             result.put(entry.getKey(), entry.getValue().get("value"));
         }
+        System.out.println(result);
 
         return result;
     }

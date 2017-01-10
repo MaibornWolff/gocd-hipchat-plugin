@@ -20,9 +20,9 @@ import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import de.maibornwolff.hipchat.executors.GetViewRequestExecutor;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Properties;
 
 public class Util {
@@ -44,4 +44,5 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.maibornwolff.hipchat.executors;
+package de.maibornwolff.hipchat.executors.fields;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

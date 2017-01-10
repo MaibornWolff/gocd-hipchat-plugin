@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.maibornwolff.hipchat.executors;
+package de.maibornwolff.hipchat.executors.fields;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -16,12 +16,14 @@
 
 package de.maibornwolff.hipchat.requests;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.maibornwolff.hipchat.RequestExecutor;
 import de.maibornwolff.hipchat.executors.ValidateConfigurationExecutor;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,19 +34,13 @@ public class ValidatePluginSettings extends HashMap<String, String> {
 
     public static ValidatePluginSettings fromJSON(String json) {
         ValidatePluginSettings result = new ValidatePluginSettings();
-
         Map<String, Map<String, String>> settings = (Map<String, Map<String, String>>) GSON.fromJson(json, HashMap.class).get("plugin-settings");
 
         for (Map.Entry<String, Map<String, String>> entry : settings.entrySet()) {
             result.put(entry.getKey(), entry.getValue().get("value"));
         }
-        System.out.println(result);
 
         return result;
-    }
-
-    private static void shouldContainValidAndCompleteJSON(Entry<String, Map<String, String>> entry) {
-
     }
 
     public RequestExecutor executor() {

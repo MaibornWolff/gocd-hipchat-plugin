@@ -17,6 +17,7 @@
 package de.maibornwolff.hipchat.executors;
 
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 

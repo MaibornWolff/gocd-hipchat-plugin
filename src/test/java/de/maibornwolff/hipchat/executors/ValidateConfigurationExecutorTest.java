@@ -28,6 +28,8 @@ public class ValidateConfigurationExecutorTest {
     @Test
     public void shouldValidateABadConfiguration() throws Exception {
         ValidatePluginSettings settings = new ValidatePluginSettings();
+        settings.put("pipelineConfig", "das ist kein json");
+
         GoPluginApiResponse response = new ValidateConfigurationExecutor(settings).execute();
 
         assertThat(response.responseCode(), is(200));
@@ -35,6 +37,10 @@ public class ValidateConfigurationExecutorTest {
                 "  {\n" +
                 "    \"message\": \"HipChat Server URL must not be blank.\",\n" +
                 "    \"key\": \"hipchat_server_url\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"message\": \"No valid JSON received for PipelineConfigField pipelineConfig\",\n" +
+                "    \"key\": \"pipelineConfig\"\n" +
                 "  }\n" +
                 "]", response.responseBody(), true);
     }
@@ -43,8 +49,7 @@ public class ValidateConfigurationExecutorTest {
     public void shouldValidateAGoodConfiguration() throws Exception {
         ValidatePluginSettings settings = new ValidatePluginSettings();
         settings.put("hipchat_server_url", "https://hipchat.example.com");
-        settings.put("default_room", "TestRoom");
-        settings.put("default_room_notification_token", "p@ssw0rd");
+        settings.put("pipelineConfig", "[]");
         GoPluginApiResponse response = new ValidateConfigurationExecutor(settings).execute();
 
         assertThat(response.responseCode(), is(200));

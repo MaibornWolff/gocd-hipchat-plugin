@@ -22,6 +22,7 @@ import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import de.maibornwolff.hipchat.HipChatPlugin;
 import de.maibornwolff.hipchat.RequestExecutor;
+import de.maibornwolff.hipchat.executors.fields.Field;
 import de.maibornwolff.hipchat.requests.ValidatePluginSettings;
 
 import java.util.ArrayList;

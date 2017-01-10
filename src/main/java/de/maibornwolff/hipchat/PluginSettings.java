@@ -20,6 +20,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import de.maibornwolff.hipchat.executors.fields.PipelineToRoomMapping;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class PluginSettings {
     private static final Gson GSON = new GsonBuilder().
@@ -31,19 +37,30 @@ public class PluginSettings {
     private String hipchatServerUrl;
 
     @Expose
-    @SerializedName("pipeline_to_room_mapping")
-    private String pipelineToRoomMapping;
+    @SerializedName("pipelineConfig")
+    private String pipelineConfig;
+
+    private List<PipelineToRoomMapping> pipelineToRoomMappings = Collections.emptyList();
 
 
     public static PluginSettings fromJSON(String json) {
-        return GSON.fromJson(json, PluginSettings.class);
+        PluginSettings pluginSettings = GSON.fromJson(json, PluginSettings.class);
+        PipelineToRoomMapping[] mappings = GSON.fromJson(pluginSettings.getPipelineConfig(), PipelineToRoomMapping[].class);
+        if (mappings!= null) {
+            pluginSettings.pipelineToRoomMappings = new ArrayList<>(Arrays.asList(mappings));
+        }
+        return pluginSettings;
     }
 
-    public String getPipelineToRoomMapping() {
-        return pipelineToRoomMapping;
+    public String getPipelineConfig() {
+        return pipelineConfig;
     }
 
     public String getHipchatServerUrl() {
         return hipchatServerUrl;
+    }
+
+    public List<PipelineToRoomMapping> getPipelineToRoomMappings() {
+        return pipelineToRoomMappings;
     }
 }

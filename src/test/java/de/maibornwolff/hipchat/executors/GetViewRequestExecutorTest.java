@@ -18,6 +18,7 @@ package de.maibornwolff.hipchat.executors;
 
 import com.google.gson.Gson;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import de.maibornwolff.hipchat.executors.fields.Field;
 import de.maibornwolff.hipchat.utils.Util;
 import org.junit.Test;
 

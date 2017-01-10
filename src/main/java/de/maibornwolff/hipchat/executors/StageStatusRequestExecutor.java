@@ -24,7 +24,10 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import de.maibornwolff.hipchat.PluginRequest;
 import de.maibornwolff.hipchat.PluginSettings;
 import de.maibornwolff.hipchat.RequestExecutor;
+import de.maibornwolff.hipchat.executors.fields.PipelineToRoomMapping;
 import de.maibornwolff.hipchat.requests.StageStatusRequest;
+import de.maibornwolff.hipchat.utils.HipChatAPIClient;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,7 +58,18 @@ public class StageStatusRequestExecutor implements RequestExecutor {
 
     protected void sendNotification() throws Exception {
         PluginSettings pluginSettings = pluginRequest.getPluginSettings();
-        String message = String.format("THIS IS MY ROOM: %s", System.getenv("HIPCHAT_NOTIFICATION_ROOM"));
-        throw new RuntimeException(message);
+        if (StringUtils.isEmpty(pluginSettings.getHipchatServerUrl())) return;
+        if (!"Failed".equals(request.pipeline.stage.state)) return;
+
+        for (PipelineToRoomMapping mapping : pluginSettings.getPipelineToRoomMappings()){
+            if (request.pipeline.name.equals(mapping.getName())) {
+                notifyPipelineEvent(pluginSettings.getHipchatServerUrl(), mapping);
+            }
+        }
+    }
+
+    private void notifyPipelineEvent(String hipChatServerUrl, PipelineToRoomMapping mapping) {
+        HipChatAPIClient client = new HipChatAPIClient(hipChatServerUrl, mapping.getRoom(), mapping.getToken());
+        client.postPipelineError(request.pipeline.name, request.pipeline.stage.name);
     }
 }

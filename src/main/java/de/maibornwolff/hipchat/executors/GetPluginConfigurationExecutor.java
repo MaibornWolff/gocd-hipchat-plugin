@@ -21,6 +21,9 @@ import com.google.gson.GsonBuilder;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import de.maibornwolff.hipchat.RequestExecutor;
+import de.maibornwolff.hipchat.executors.fields.Field;
+import de.maibornwolff.hipchat.executors.fields.PipelineConfigField;
+import de.maibornwolff.hipchat.executors.fields.NonBlankField;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +35,7 @@ public class GetPluginConfigurationExecutor implements RequestExecutor {
     public static final Field HIPCHAT_SERVER_URL = new NonBlankField("hipchat_server_url",
             "HipChat Server URL", null, true, false, "0");
 
-    public static final Field PIPELINE_TO_ROOM_MAPPING = new Field("pipelineConfig", "Pipeline Config",
+    public static final Field PIPELINE_TO_ROOM_MAPPING = new PipelineConfigField("pipelineConfig", "Pipeline Config",
             null, false, true, "1");
 
     public static final Map<String, Field> FIELDS = new LinkedHashMap<>();

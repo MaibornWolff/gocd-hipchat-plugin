@@ -14,13 +14,13 @@
   ~ limitations under the License.
   -->
 
-<!--
-This page contains the view for your settings.
-Ensure that the keys you use are also declared in the GetPluginConfigurationExecutor class
--->
 <script type="text/javascript">
-    /** setTimeout as a workaround for the fact that GoCD does not give us a hook or callback for when the modal is shown *facepalm* */
+    /* this setTimeout is a workaround for the fact that GoCD does not give us a hook or callback for when the modal is shown *facepalm* */
     setTimeout(function(){
+
+        getAvailablePipelinesForAutocomplete();
+        initAngularForm();
+
         function getAvailablePipelinesForAutocomplete() {
             jQuery.get("/go/cctray.xml", function (data) {
                 _.map(
@@ -29,56 +29,55 @@ Ensure that the keys you use are also declared in the GetPluginConfigurationExec
                             return jQuery(project).attr("name").split("::")[0];
                         })
                     ), function (projectName) {
-                        var name = projectName.trim();
-                        var option = jQuery("<option/>");
-                        var option = option.attr({"value": name}).text(name);
+                        var option = jQuery("<option/>").attr({"value": projectName}).text(projectName);
                         jQuery("#available-pipelines").append(option);
                     });
             });
         }
-        getAvailablePipelinesForAutocomplete();
+
+        function initAngularForm(){
+            var $scope = angular.element(document.getElementById("plugin_settings_angular_plugin_settings")).scope();
+            $scope.$apply(function(){
+                /* the "pipelineConfig" hidden field is a workaround for the shortcomings of the hardcoded JQuery form submit in GoCD, which does not take
+                into account the array that Angular keeps for pipelines. So we flatten the array as JSON into this field and send it to the server. */
+                $scope.pipelines = $scope.pipelineConfig ? JSON.parse($scope.pipelineConfig) : [defaultPipeline()];
+            });
+
+            $scope.$watch("pipelines", function() {
+                $scope.pipelineConfig = angular.copy($scope.pipelines).toJSON();
+            }, true);
+
+            $scope.addPipelineMapping = function(){
+                $scope.pipelines.push(defaultPipeline());
+            };
+
+            $scope.removePipelineMapping = function(index){
+                $scope.pipelines.splice(index, 1);
+            };
+        }
 
         function defaultPipeline() {
             return {
                 "name": "",
                 "room": "",
                 "token": ""
-            }
+            };
         }
-        $scope = angular.element(document.getElementById("plugin_settings_angular_plugin_settings")).scope();
-        $scope.$apply(function(){
-            $scope.pipelines = $scope.pipelineConfig ? JSON.parse($scope.pipelineConfig) : [defaultPipeline()]
-        });
-
-        $scope.$watch("pipelines", function() {
-            $scope.pipelineConfig = angular.copy($scope.pipelines).toJSON();
-        }, true);
-
-        $scope.addPipelineMapping = function(){
-            $scope.pipelines.push(defaultPipeline());
-        };
-
-        $scope.removePipelineMapping = function(index){
-            $scope.pipelines.splice(index, 1);
-        };
     }, 75);
 </script>
 
 <div>
     <div class="form_item_block">
-        <label><h3>HipChat server URL<span class='asterix'>*</span></h3></label>
+        <label><h3>HipChat server URL<span class='asterisk'>*</span></h3></label>
         <input type="url" ng-model="hipchat_server_url" ng-required="true"/>
         <span class="form_error" ng-show="GOINPUTNAME[hipchat_server_url].$error.server">{{GOINPUTNAME[hipchat_server_url].$error.server}}</span>
-        <!-- This hidden field is a workaround for the shortcomings of the hardcoded JQuery form submit in GoCD, which does not take
-        into account the array that Angular keeps for pipelines. So we flatten the array as JSON into this field and send it to the server. -->
         <input id="pipelineConfig" type="hidden" ng-model="pipelineConfig" value="{{pipelineConfig}}"/>
         <span class="form_error" ng-show="GOINPUTNAME[pipelineConfig].$error.server">{{GOINPUTNAME[pipelineConfig].$error.server}}</span>
     </div>
 
     <div class="form_item_block">
         <h3>Pipeline to room mapping</h3>
-        <p style="margin-bottom: 5px">
-            This is where you specify a chat room for each pipeline to post notifications to.
+        <p style="margin-bottom: 5px"> This is where you specify a chat room for each pipeline to post notifications to.
         </p>
         <table id="pipeline-configurations" class="list_table">
             <thead>
@@ -90,7 +89,6 @@ Ensure that the keys you use are also declared in the GetPluginConfigurationExec
                 </tr>
             </thead>
             <tbody class="artifact">
-                <datalist id="available-pipelines"></datalist>
                 <tr ng-repeat="pipeline in pipelines">
                     <td class="name_value_cell">
                         <input style="width:inherit" type="text" ng-model="pipeline.name" ng-required="true" list="available-pipelines" tabindex="{{$index * 3 + 1}}"/>
@@ -107,9 +105,10 @@ Ensure that the keys you use are also declared in the GetPluginConfigurationExec
                 </tr>
             </tbody>
         </table>
+        <datalist id="available-pipelines">
+        </datalist>
         <a id="add_pipeline_config" ng-click="addPipelineMapping()" class="action_icon skip_dirty_stop add_icon" href="#">
             <span class="icon"></span><span>Add new mapping</span>
         </a>
     </div>
-</div>
 </div>

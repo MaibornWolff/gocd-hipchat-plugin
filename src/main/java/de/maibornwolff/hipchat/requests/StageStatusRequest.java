@@ -50,6 +50,13 @@ public class StageStatusRequest {
         return new StageStatusRequestExecutor(this, pluginRequest);
     }
 
+    @Override
+    public String toString() {
+        return "StageStatusRequest{" +
+            "pipeline=" + pipeline +
+            '}';
+    }
+
     public static class Pipeline {
         @SerializedName("name")
         public String name;
@@ -65,6 +72,17 @@ public class StageStatusRequest {
 
         @SerializedName("stage")
         public Stage stage;
+
+        @Override
+        public String toString() {
+            return "Pipeline{" +
+                "name='" + name + '\'' +
+                ", counter='" + counter + '\'' +
+                ", group='" + group + '\'' +
+                ", buildCause=" + buildCause +
+                ", stage=" + stage +
+                '}';
+        }
     }
 
     public static class BuildCause {
@@ -103,6 +121,21 @@ public class StageStatusRequest {
         @SerializedName("last-transition-time")
         public Date lastTransitionTime;
         public List<Job> jobs;
+
+        @Override
+        public String toString() {
+            return "Stage{" +
+                "name='" + name + '\'' +
+                ", counter='" + counter + '\'' +
+                ", approvalType='" + approvalType + '\'' +
+                ", approvedBy='" + approvedBy + '\'' +
+                ", state='" + state + '\'' +
+                ", result='" + result + '\'' +
+                ", createTime=" + createTime +
+                ", lastTransitionTime=" + lastTransitionTime +
+                ", jobs=" + jobs +
+                '}';
+        }
     }
 
     public static class Job {

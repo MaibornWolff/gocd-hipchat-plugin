@@ -40,7 +40,6 @@ public class ValidateConfigurationExecutor implements RequestExecutor {
     }
 
     public GoPluginApiResponse execute() {
-        LOG.info(String.format("Validating config: %s", settings));
         List<Map<String, String>> result = new ArrayList<>();
 
 

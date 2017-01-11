@@ -2,26 +2,35 @@ package de.maibornwolff.hipchat.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thoughtworks.go.plugin.api.logging.Logger;
+import de.maibornwolff.hipchat.HipChatPlugin;
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.RetryPolicy;
+import org.apache.commons.lang3.ArrayUtils;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 public class HipChatAPIClient {
     private static final Gson GSON = new GsonBuilder().create();
+    public static final Logger LOG = Logger.getLoggerFor(HipChatPlugin.class);
 
-    private final String hipchatServer;
+    private final String hipChatServer;
     private final String room;
     private final String token;
 
     public HipChatAPIClient(String hipchatServer, String room, String token) {
-        this.hipchatServer = hipchatServer;
+        this.hipChatServer = hipchatServer;
         this.room = room;
         this.token = token;
     }
@@ -33,7 +42,7 @@ public class HipChatAPIClient {
         properties.put("notify", "true");
         properties.put("mesage_format", "text");
 
-        performPOSTRequest(String.format("%s/v2/room/%s/notification", hipchatServer, room), GSON.toJson(properties), token);
+        performPOSTRequest(GSON.toJson(properties));
     }
 
     public void postPipelineSuccess(String pipeline, String stage) {
@@ -42,49 +51,45 @@ public class HipChatAPIClient {
         properties.put("message", String.format("Pipeline %s passed", pipeline, stage));
         properties.put("notify", "true");
         properties.put("mesage_format", "text");
-        performPOSTRequest(String.format("%s/v2/room/%s/notification", hipchatServer, room), GSON.toJson(properties), token);
+        performPOSTRequest(GSON.toJson(properties));
     }
 
-    public static String performPOSTRequest(String urlString, String requestBody, String token) {
-        HttpURLConnection connection = null;
+    public String performPOSTRequest(final String body) {
+        RetryPolicy retryPolicy = new RetryPolicy()
+            .retryOn(RuntimeException.class)
+            .withMaxRetries(5)
+            .withBackoff(1, 30, TimeUnit.SECONDS);
 
-        try {
-            //Create connection
-            URL url = new URL(urlString);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
+        return Failsafe.with(retryPolicy).get(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                SSLContext context = SSLContext.getInstance("TLSv1.2");
+                context.init(null,null,null);
 
-            connection.setRequestProperty("Content-Length",
-                Integer.toString(requestBody.getBytes().length));
-            connection.setRequestProperty("Authorization", "Bearer " + token);
+                SSLSocketFactory factory = (SSLSocketFactory)context.getSocketFactory();
+                SSLSocket socket = (SSLSocket)factory.createSocket();
+                String[] protocols = socket.getEnabledProtocols();
 
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
+                if (!ArrayUtils.contains(protocols,"TLSv1.2")){
+                    LOG.warn("TLS 1.2 is not enabled in this Java process. HipChat refuses any connection with TLS Versions below 1.2");
+                    LOG.warn("Please enable TLS 1.2 if you experience 'Connection reset' issues.");
+                }
 
-            //Send request
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(requestBody);
-            wr.close();
+                WebTarget target = ClientBuilder.newClient()
+                    .target(hipChatServer)
+                    .path("v2")
+                    .path("room")
+                    .path(room)
+                    .path("notification");
+                Response response = target
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + token)
+                    .post(Entity.entity(body, MediaType.APPLICATION_JSON));
 
-            //Get Response
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuffer response = new StringBuffer();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
+                LOG.info(String.format("Notified %s with status code %d", room, response.getStatus()));
+                return "Status: " + response.getStatus();
             }
-            rd.close();
-            return response.toString();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to connect to HipChat API server at " + urlString, e);
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
+        });
     }
-
 }

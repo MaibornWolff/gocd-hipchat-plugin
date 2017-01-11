@@ -19,8 +19,10 @@ package de.maibornwolff.hipchat.executors;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import de.maibornwolff.hipchat.HipChatPlugin;
 import de.maibornwolff.hipchat.PluginRequest;
 import de.maibornwolff.hipchat.PluginSettings;
 import de.maibornwolff.hipchat.RequestExecutor;
@@ -29,11 +31,14 @@ import de.maibornwolff.hipchat.requests.StageStatusRequest;
 import de.maibornwolff.hipchat.utils.HipChatAPIClient;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class StageStatusRequestExecutor implements RequestExecutor {
     private static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+    public static final Logger LOG = Logger.getLoggerFor(HipChatPlugin.class);
 
     private final StageStatusRequest request;
     private final PluginRequest pluginRequest;
@@ -51,7 +56,8 @@ public class StageStatusRequestExecutor implements RequestExecutor {
             responseJson.put("status", "success");
         } catch (Exception e) {
             responseJson.put("status", "failure");
-            responseJson.put("messages", Arrays.asList(e.getMessage()));
+            LOG.error("Unexpected exception occurred", e);
+            responseJson.put("messages", Arrays.asList(e.getMessage(), "Check plugin logfile for details."));
         }
         return new DefaultGoPluginApiResponse(200, GSON.toJson(responseJson));
     }

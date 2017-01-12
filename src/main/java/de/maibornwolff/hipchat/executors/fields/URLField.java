@@ -18,8 +18,11 @@ package de.maibornwolff.hipchat.executors.fields;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class NonBlankField extends Field {
-    public NonBlankField(String key, String displayName, String defaultValue, Boolean required, Boolean secure, String displayOrder) {
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class URLField extends Field {
+    public URLField(String key, String displayName, String defaultValue, Boolean required, Boolean secure, String displayOrder) {
         super(key, displayName, defaultValue, required, secure, displayOrder);
     }
 
@@ -27,6 +30,11 @@ public class NonBlankField extends Field {
     public String doValidate(String input) {
         if (StringUtils.isBlank(input)) {
             return this.displayName + " must not be blank.";
+        }
+        try {
+            new URL(input);
+        } catch (MalformedURLException e) {
+            return this.displayName + " is not a valid URL.";
         }
         return null;
     }

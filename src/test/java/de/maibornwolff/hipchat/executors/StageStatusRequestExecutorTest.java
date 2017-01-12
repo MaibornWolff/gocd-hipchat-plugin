@@ -40,7 +40,6 @@ public class StageStatusRequestExecutorTest {
     }
 
     @Test
-    @Ignore
     public void shouldRenderAnErrorResponseIfNotificationWasNotSent() throws Exception {
         GoPluginApiResponse response = new StageStatusRequestExecutor(null, null) {
             @Override
@@ -50,6 +49,6 @@ public class StageStatusRequestExecutorTest {
         }.execute();
 
         assertThat(response.responseCode(), is(200));
-        JSONAssert.assertEquals("{\"status\":\"failure\",\"messages\":[\"Boom!\"]}", response.responseBody(), false);
+        JSONAssert.assertEquals("{\"status\":\"failure\",\"messages\":[\"Boom!\", \"Check plugin logfile for details.\"]}", response.responseBody(), false);
     }
 }

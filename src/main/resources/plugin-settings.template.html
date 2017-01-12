@@ -69,15 +69,20 @@
 <div>
     <div class="form_item_block">
         <label><h3>HipChat server URL<span class='asterisk'>*</span></h3></label>
-        <input type="url" ng-model="hipchat_server_url" ng-required="true"/>
+        <input type="url" ng-model="hipchat_server_url" ng-required="true" placeholder="https://hipchat.example.com"/>
         <span class="form_error" ng-show="GOINPUTNAME[hipchat_server_url].$error.server">{{GOINPUTNAME[hipchat_server_url].$error.server}}</span>
         <input id="pipelineConfig" type="hidden" ng-model="pipelineConfig" value="{{pipelineConfig}}"/>
         <span class="form_error" ng-show="GOINPUTNAME[pipelineConfig].$error.server">{{GOINPUTNAME[pipelineConfig].$error.server}}</span>
     </div>
 
+    <div class="warnings" style="margin: 0px 0px 10px;">
+        HipChat versions 2.0.4 and later only allow TLS 1.2 connections.<br>
+        Make sure your GoCD servers and agents run Java with TLS 1.2 support enabled when experiencing 'Connection reset' issues.
+    </div>
+
     <div class="form_item_block">
-        <h3>Pipeline to room mapping</h3>
-        <p style="margin-bottom: 5px"> This is where you specify a chat room for each pipeline to post notifications to.
+        <h3>Rooms to notify upon build failure</h3>
+        <p style="margin-bottom: 5px"> This is where you specify where the plugin will post notifications to when a build fails.
         </p>
         <table id="pipeline-configurations" class="list_table">
             <thead>

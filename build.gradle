@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+plugins {
+      id 'net.researchgate.release' version '2.4.0'
+}
+    
+
 apply plugin: 'java'
 
 group = 'de.maibornwolff.gocd-hipchat-notification'
-version = '0.1-SNAPSHOT'
+version = '0.9-SNAPSHOT'
 
 // these values that go into plugin.xml
 project.ext.pluginDesc = [

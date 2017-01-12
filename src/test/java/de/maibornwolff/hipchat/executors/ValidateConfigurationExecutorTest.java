@@ -26,9 +26,9 @@ import static org.junit.Assert.assertThat;
 
 public class ValidateConfigurationExecutorTest {
     @Test
-    public void shouldValidateABadConfiguration() throws Exception {
+    public void shouldRejectBadJSONPipelineConfigsAndBlankServerURLs() throws Exception {
         ValidatePluginSettings settings = new ValidatePluginSettings();
-        settings.put("pipelineConfig", "das ist kein json");
+        settings.put("pipelineConfig", "this is not json");
 
         GoPluginApiResponse response = new ValidateConfigurationExecutor(settings).execute();
 
@@ -43,6 +43,22 @@ public class ValidateConfigurationExecutorTest {
                 "    \"key\": \"pipelineConfig\"\n" +
                 "  }\n" +
                 "]", response.responseBody(), true);
+    }
+
+    @Test
+    public void shouldRejectInvalidServerUrls() throws Exception {
+        ValidatePluginSettings settings = new ValidatePluginSettings();
+        settings.put("hipchat_server_url", "this is not a valid url");
+
+        GoPluginApiResponse response = new ValidateConfigurationExecutor(settings).execute();
+
+        assertThat(response.responseCode(), is(200));
+        JSONAssert.assertEquals("[\n" +
+            "  {\n" +
+            "    \"message\": \"HipChat Server URL is not a valid URL.\",\n" +
+            "    \"key\": \"hipchat_server_url\"\n" +
+            "  }\n" +
+            "]", response.responseBody(), true);
     }
 
     @Test

@@ -1,6 +1,6 @@
 # HipChat integration for GoCD
 
-This Plugin for GoCD enables Notifications to be posted on HipChat.
+This Plugin for GoCD enables notifications to be posted on HipChat.
 
 ## Features 
 
@@ -9,8 +9,8 @@ This Plugin for GoCD enables Notifications to be posted on HipChat.
 
 ## Building and testing
 
-To start GoCD inside a docker container run `make server` 
-To build the plugin jar and deploy it to the container run `make deploy`
+To start GoCD inside a Vagrant VM run `make server`.
+run `make deploy` to deploy the plugin to the VM.
 
 ## License
 
@@ -30,5 +30,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
-

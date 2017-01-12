@@ -22,7 +22,6 @@ plugins {
 apply plugin: 'java'
 
 group = 'de.maibornwolff.gocd-hipchat-notification'
-version = '0.9-SNAPSHOT'
 
 // these values that go into plugin.xml
 project.ext.pluginDesc = [

@@ -11,8 +11,5 @@ Vagrant.configure("2") do |config|
     sudo apt-get update
     echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
     sudo apt-get install -y oracle-java8-installer oracle-java8-set-default
-	source /vagrant/gradle.properties # $version is now set to the plugin version
-	ln -s "/vagrant/build/libs/hipchat-plugin-$version.jar" "/var/lib/go-server/plugins/external/hipchat-plugin.jar"
-    sudo service go-server restart
   SHELL
 end

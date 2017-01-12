@@ -10,5 +10,5 @@ start-vm:
 
 deploy:
 	$(GRADLE) clean test assemble
-	vagrant ssh -c "sudo service go-server restart
+	vagrant ssh -c "sudo service go-server restart"
 

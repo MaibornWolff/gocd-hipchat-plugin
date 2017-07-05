@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import de.maibornwolff.hipchat.executors.fields.PipelineToRoomMapping;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,10 @@ public class PluginSettings {
     private static final Gson GSON = new GsonBuilder().
             excludeFieldsWithoutExposeAnnotation().
             create();
+
+    @Expose
+    @SerializedName("gocd_server_url")
+    private String gocdServerUrl;
 
     @Expose
     @SerializedName("hipchat_server_url")
@@ -52,6 +57,10 @@ public class PluginSettings {
         return pluginSettings;
     }
 
+    public boolean isConfigured() {
+        return StringUtils.isNotEmpty(getHipchatServerUrl()) && StringUtils.isNotEmpty(getGocdServerUrl());
+    }
+
     public String getPipelineConfig() {
         return pipelineConfig;
     }
@@ -62,5 +71,9 @@ public class PluginSettings {
 
     public List<PipelineToRoomMapping> getPipelineToRoomMappings() {
         return pipelineToRoomMappings;
+    }
+
+    public String getGocdServerUrl() {
+        return gocdServerUrl;
     }
 }

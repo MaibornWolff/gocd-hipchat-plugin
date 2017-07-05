@@ -25,12 +25,14 @@ public class PluginSettingsTest {
     @Test
     public void shouldDeserializeFromJSON() throws Exception {
         PluginSettings pluginSettings = PluginSettings.fromJSON("{" +
-                "\"hipchat_server_url\": \"https://hipchat.example.com/\", " +
-                "\"default_room\": \"Myroom\", " +
-                "\"pipelineConfig\": \"[{\\\"foo\\\":\\\"bar\\\",\\\"foobar\\\":\\\"baz\\\"}]\" " +
-                "}");
+            "\"hipchat_server_url\": \"https://hipchat.example.com/\", " +
+            "\"gocd_server_url\": \"https://gocd.example.com/\", " +
+            "\"default_room\": \"Myroom\", " +
+            "\"pipelineConfig\": \"[{\\\"foo\\\":\\\"bar\\\",\\\"foobar\\\":\\\"baz\\\"}]\" " + // legacy format
+            "}");
 
         assertThat(pluginSettings.getHipchatServerUrl(), is("https://hipchat.example.com/"));
+        assertThat(pluginSettings.getGocdServerUrl(), is("https://gocd.example.com/"));
         assertThat(pluginSettings.getPipelineConfig(), is("[{\"foo\":\"bar\",\"foobar\":\"baz\"}]"));
     }
 }

@@ -32,6 +32,9 @@ public class GetPluginConfigurationExecutor implements RequestExecutor {
 
     private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
+    public static final Field GOCD_SERVER_URL = new URLField("gocd_server_url",
+        "GoCD Server URL", null, true, false, "0");
+
     public static final Field HIPCHAT_SERVER_URL = new URLField("hipchat_server_url",
             "HipChat Server URL", null, true, false, "0");
 
@@ -41,6 +44,7 @@ public class GetPluginConfigurationExecutor implements RequestExecutor {
     public static final Map<String, Field> FIELDS = new LinkedHashMap<>();
 
     static {
+        FIELDS.put(GOCD_SERVER_URL.key(), GOCD_SERVER_URL);
         FIELDS.put(HIPCHAT_SERVER_URL.key(), HIPCHAT_SERVER_URL);
         FIELDS.put(PIPELINE_TO_ROOM_MAPPING.key(), PIPELINE_TO_ROOM_MAPPING);
     }

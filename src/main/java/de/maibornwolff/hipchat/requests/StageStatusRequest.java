@@ -29,10 +29,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class StageStatusRequest {
     public static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -46,8 +43,8 @@ public class StageStatusRequest {
         return GSON.fromJson(json, StageStatusRequest.class);
     }
 
-    public RequestExecutor executor(PluginRequest pluginRequest) {
-        return new StageStatusRequestExecutor(this, pluginRequest);
+    public RequestExecutor executor(PluginRequest pluginRequest, Set<String> pipelinesThatFailedBefore) {
+        return new StageStatusRequestExecutor(this, pluginRequest, pipelinesThatFailedBefore);
     }
 
     @Override

@@ -45,19 +45,25 @@ public class GetPluginConfigurationExecutorTest {
 
         assertThat(response.responseCode(), CoreMatchers.is(200));
         String expectedJSON = "{\n" +
-                "  \"hipchat_server_url\": {\n" +
-                "    \"display-name\": \"HipChat Server URL\",\n" +
-                "    \"required\": true,\n" +
-                "    \"secure\": false,\n" +
-                "    \"display-order\": \"0\"\n" +
-                "  },\n" +
-                "  \"pipelineConfig\": {\n" +
-                "    \"display-name\": \"Pipeline Config\",\n" +
-                "    \"required\": false,\n" +
-                "    \"secure\": true,\n" +
-                "    \"display-order\": \"1\"\n" +
-                "  }\n" +
-                "}";
+            "  \"hipchat_server_url\": {\n" +
+            "    \"display-name\": \"HipChat Server URL\",\n" +
+            "    \"required\": true,\n" +
+            "    \"secure\": false,\n" +
+            "    \"display-order\": \"0\"\n" +
+            "  },\n" +
+            "  \"gocd_server_url\": {\n" +
+            "    \"display-name\": \"GoCD Server URL\",\n" +
+            "    \"required\": true,\n" +
+            "    \"secure\": false,\n" +
+            "    \"display-order\": \"0\"\n" +
+            "  },\n" +
+            "  \"pipelineConfig\": {\n" +
+            "    \"display-name\": \"Pipeline Config\",\n" +
+            "    \"required\": false,\n" +
+            "    \"secure\": true,\n" +
+            "    \"display-order\": \"1\"\n" +
+            "  }\n" +
+            "}";
         JSONAssert.assertEquals(expectedJSON, response.responseBody(), true);
 
     }

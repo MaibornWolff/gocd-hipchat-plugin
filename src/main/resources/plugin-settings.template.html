@@ -68,9 +68,16 @@
 
 <div>
     <div class="form_item_block">
+        <label><h3>GoCD server URL<span class='asterisk'>*</span></h3></label>
+        <input type="url" ng-model="gocd_server_url" ng-required="true" placeholder="https://gocd.example.com"/>
+        <span class="form_error" ng-show="GOINPUTNAME[gocd_server_url].$error.server">{{GOINPUTNAME[gocd_server_url].$error.server}}</span>
+    </div>
+
+    <div class="form_item_block">
         <label><h3>HipChat server URL<span class='asterisk'>*</span></h3></label>
         <input type="url" ng-model="hipchat_server_url" ng-required="true" placeholder="https://hipchat.example.com"/>
         <span class="form_error" ng-show="GOINPUTNAME[hipchat_server_url].$error.server">{{GOINPUTNAME[hipchat_server_url].$error.server}}</span>
+
         <input id="pipelineConfig" type="hidden" ng-model="pipelineConfig" value="{{pipelineConfig}}"/>
         <span class="form_error" ng-show="GOINPUTNAME[pipelineConfig].$error.server">{{GOINPUTNAME[pipelineConfig].$error.server}}</span>
     </div>

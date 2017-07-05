@@ -29,22 +29,23 @@ import de.maibornwolff.hipchat.RequestExecutor;
 import de.maibornwolff.hipchat.executors.fields.PipelineToRoomMapping;
 import de.maibornwolff.hipchat.requests.StageStatusRequest;
 import de.maibornwolff.hipchat.utils.HipChatAPIClient;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class StageStatusRequestExecutor implements RequestExecutor {
     private static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
     public static final Logger LOG = Logger.getLoggerFor(HipChatPlugin.class);
 
-    private final StageStatusRequest request;
+    private final Set<String> pipelinesThatFailedBefore;
+    private final StageStatusRequest stageStatus;
     private final PluginRequest pluginRequest;
 
-    public StageStatusRequestExecutor(StageStatusRequest request, PluginRequest pluginRequest) {
-        this.request = request;
+    public StageStatusRequestExecutor(StageStatusRequest request, PluginRequest pluginRequest, Set<String> failedPipelines){
+        this.pipelinesThatFailedBefore = failedPipelines;
+        this.stageStatus = request;
         this.pluginRequest = pluginRequest;
     }
 
@@ -62,20 +63,45 @@ public class StageStatusRequestExecutor implements RequestExecutor {
         return new DefaultGoPluginApiResponse(200, GSON.toJson(responseJson));
     }
 
+    private String stageAndPipelineName() {
+        return stageStatus.pipeline.name + stageStatus.pipeline.stage.name;
+    }
+
     protected void sendNotification() throws Exception {
         PluginSettings pluginSettings = pluginRequest.getPluginSettings();
-        if (StringUtils.isEmpty(pluginSettings.getHipchatServerUrl())) return;
-        if (!"Failed".equals(request.pipeline.stage.state)) return;
-
+        LOG.info(String.format("HipChat URL set to %s, GoCD URL is set to: %s", pluginSettings.getHipchatServerUrl(), pluginSettings.getGocdServerUrl()));
+        if (!pluginSettings.isConfigured()) {
+            LOG.warn("HipChat plugin is not configured. Please configure it by clicking on the Gears icon on the plugin admin page.");
+            return;
+        }
         for (PipelineToRoomMapping mapping : pluginSettings.getPipelineToRoomMappings()){
-            if (request.pipeline.name.equals(mapping.getName())) {
-                notifyPipelineEvent(pluginSettings.getHipchatServerUrl(), mapping);
+            if (stageStatus.pipeline.name.equals(mapping.getName())) {
+                if ("Failed".equals(stageStatus.pipeline.stage.state)) {
+                    markPipelineAsFailed(stageAndPipelineName());
+                    notifyPipelineFailure(pluginSettings.getGocdServerUrl(),pluginSettings.getHipchatServerUrl(), mapping, stageStatus);
+                } else if ("Passed".equals(stageStatus.pipeline.stage.state) && pipelinesThatFailedBefore.contains(stageAndPipelineName())){
+                    markPipelineAsSucceeded(stageAndPipelineName());
+                    notifyPipelineFixed(pluginSettings.getGocdServerUrl(),pluginSettings.getHipchatServerUrl(), mapping, stageStatus);
+                }
             }
         }
     }
 
-    private void notifyPipelineEvent(String hipChatServerUrl, PipelineToRoomMapping mapping) {
-        HipChatAPIClient client = new HipChatAPIClient(hipChatServerUrl, mapping.getRoom(), mapping.getToken());
-        client.postPipelineError(request.pipeline.name, request.pipeline.stage.name);
+    private void markPipelineAsSucceeded(String name) {
+        this.pipelinesThatFailedBefore.remove(name);
+    }
+
+    private void markPipelineAsFailed(String name) {
+        this.pipelinesThatFailedBefore.add(name);
+    }
+
+    private void notifyPipelineFixed(String gocdServerUrl, String hipChatServerUrl, PipelineToRoomMapping mapping, StageStatusRequest stageStatus) {
+        HipChatAPIClient client = new HipChatAPIClient(gocdServerUrl, hipChatServerUrl, mapping.getRoom(), mapping.getToken());
+        client.postPipelineFixed(stageStatus);
+    }
+
+    private void notifyPipelineFailure(String gocdServerUrl, String hipChatServerUrl, PipelineToRoomMapping mapping, StageStatusRequest stageStatus) {
+        HipChatAPIClient client = new HipChatAPIClient(gocdServerUrl, hipChatServerUrl, mapping.getRoom(), mapping.getToken());
+        client.postPipelineError(stageStatus);
     }
 }

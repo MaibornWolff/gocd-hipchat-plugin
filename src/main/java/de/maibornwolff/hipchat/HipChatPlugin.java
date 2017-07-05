@@ -30,6 +30,8 @@ import de.maibornwolff.hipchat.executors.NotificationInterestedInExecutor;
 import de.maibornwolff.hipchat.requests.StageStatusRequest;
 import de.maibornwolff.hipchat.requests.ValidatePluginSettings;
 
+import java.util.HashSet;
+
 import static de.maibornwolff.hipchat.Constants.PLUGIN_IDENTIFIER;
 
 @Extension
@@ -39,11 +41,13 @@ public class HipChatPlugin implements GoPlugin {
 
     private GoApplicationAccessor accessor;
     private PluginRequest pluginRequest;
+    private HashSet<String> pipelinesThatFailedBefore;
 
     @Override
     public void initializeGoApplicationAccessor(GoApplicationAccessor accessor) {
         this.accessor = accessor;
         this.pluginRequest = new PluginRequest(accessor);
+        this.pipelinesThatFailedBefore = new HashSet<>();
     }
 
     @Override
@@ -55,7 +59,7 @@ public class HipChatPlugin implements GoPlugin {
                 case REQUEST_NOTIFICATIONS_INTERESTED_IN:
                     return new NotificationInterestedInExecutor().execute();
                 case REQUEST_STAGE_STATUS:
-                    return StageStatusRequest.fromJSON(request.requestBody()).executor(pluginRequest).execute();
+                    return StageStatusRequest.fromJSON(request.requestBody()).executor(pluginRequest, this.pipelinesThatFailedBefore).execute();
                 case PLUGIN_SETTINGS_GET_CONFIGURATION:
                     return new GetPluginConfigurationExecutor().execute();
                 case PLUGIN_SETTINGS_VALIDATE_CONFIGURATION:

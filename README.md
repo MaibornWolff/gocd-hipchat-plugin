@@ -6,6 +6,17 @@ This Plugin for GoCD enables notifications to be posted on HipChat.
 
 * Get notified when any stage in your pipeline fails.
 * Configure a separate room for each pipeline.
+* Get notified when someone fixed a failing build.
+
+## Screenshots
+
+### Plugin configuration
+
+![screenshot of the configuration window](screenshot.png)
+
+### Notifications
+
+![screenshot of some notifications](notifications.png)
 
 ## Building and testing
 
